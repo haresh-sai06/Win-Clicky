@@ -1,0 +1,29 @@
+{
+  "title": "Demo of my project",
+  "steps": [
+    {
+      "say": "Hey judges! Let me walk you through what we built.",
+      "point": { "x": 0.5, "y": 0.08, "label": "Our project" },
+      "hold": 1200
+    },
+    {
+      "say": "This is the main area where all the action happens.",
+      "find": "the main content area",
+      "hold": 1000
+    },
+    {
+      "say": "Right here is the button that kicks off the magic.",
+      "find": "the primary action button",
+      "hold": 1000
+    },
+    {
+      "say": "Notice how fast the results come back.",
+      "find": "the results or output section",
+      "hold": 1200
+    },
+    {
+      "say": "That's our project. Thanks so much for watching!",
+      "hold": 600
+    }
+  ]
+}

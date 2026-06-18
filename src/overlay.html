@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clicky Overlay</title>
+    <link rel="stylesheet" href="overlay.css" />
+  </head>
+  <body>
+    <!-- The flying pointer. Position is set in normalized 0..1 screen coords. -->
+    <div id="pointer" class="hidden">
+      <div class="ring"></div>
+      <div class="dot"></div>
+      <div id="ptr-label" class="label"></div>
+    </div>
+
+    <!-- Subtitle bar: shows what the buddy is currently saying. -->
+    <div id="caption" class="hidden"></div>
+
+    <script src="overlay.js"></script>
+  </body>
+</html>

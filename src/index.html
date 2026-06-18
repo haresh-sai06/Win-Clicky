@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clicky</title>
+    <link rel="stylesheet" href="panel.css" />
+  </head>
+  <body>
+    <div id="card">
+      <!-- Title bar (drag handle) -->
+      <div id="titlebar">
+        <span class="buddy" data-tauri-drag-region>🤖</span>
+        <span class="name" data-tauri-drag-region>Clicky</span>
+        <span class="spacer" data-tauri-drag-region></span>
+        <button id="btn-settings" title="Settings">⚙</button>
+        <button id="btn-min" title="Collapse">—</button>
+      </div>
+
+      <!-- Main view -->
+      <div id="main">
+        <div id="status">Ready — Ctrl+Alt+Space to talk</div>
+        <div id="response"></div>
+
+        <div class="row">
+          <input id="ask-input" type="text" placeholder="Ask Clicky about your screen…" />
+          <button id="btn-mic" title="Hold to speak (Web Speech API)">🎙️</button>
+          <button id="btn-ask" class="primary">Ask</button>
+        </div>
+
+        <div class="demo-bar">
+          <span class="demo-title">🎤 Hackathon demo</span>
+          <div class="row">
+            <button id="btn-autodemo" class="primary">✨ Auto-demo</button>
+            <button id="btn-rundemo">▶ Run script</button>
+            <button id="btn-stop" class="danger">⏹ Stop</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Demo-script editor (collapsible) -->
+      <details id="demo-editor">
+        <summary>Demo script (JSON)</summary>
+        <div class="row" style="margin-top:6px">
+          <button id="btn-load-demo" title="Load a JSON demo script from disk">📂 Load file</button>
+        </div>
+        <textarea id="demo-json" spellcheck="false"></textarea>
+        <div class="hint">
+          Steps run top to bottom. Each step:
+          <code>say</code> (spoken),
+          <code>find</code> (describe what to point at) or
+          <code>point</code> <code>{x,y,label}</code> with x,y as 0–1 fractions,
+          and optional <code>hold</code> (ms).
+        </div>
+      </details>
+
+      <!-- Settings drawer -->
+      <div id="settings" class="drawer hidden">
+        <h3>Settings</h3>
+
+        <label>LLM provider</label>
+        <select id="cfg-provider">
+          <option value="openai">OpenAI-compatible</option>
+          <option value="anthropic">Anthropic</option>
+        </select>
+
+        <div class="presets">
+          <span>Quick fill:</span>
+          <button data-preset="openai">OpenAI</button>
+          <button data-preset="groq">Groq</button>
+          <button data-preset="openrouter">OpenRouter</button>
+          <button data-preset="ollama">Ollama (local)</button>
+        </div>
+
+        <label>Base URL</label>
+        <input id="cfg-base" type="text" placeholder="https://api.openai.com/v1" />
+
+        <label>API key</label>
+        <input id="cfg-key" type="password" placeholder="sk-… (blank for local)" />
+
+        <label>Model</label>
+        <input id="cfg-model" type="text" placeholder="gpt-4o-mini" />
+
+        <label class="check">
+          <input id="cfg-vision" type="checkbox" /> Send screenshots (needs a vision model)
+        </label>
+
+        <label>Voice (Windows SAPI name — blank = default)</label>
+        <input id="cfg-voice" type="text" placeholder="Microsoft Zira Desktop" />
+
+        <label>Speech rate (−10 … 10)</label>
+        <input id="cfg-rate" type="number" min="-10" max="10" value="1" />
+
+        <label>Persona / system prompt</label>
+        <textarea id="cfg-system" rows="2"></textarea>
+
+        <div class="row">
+          <button id="btn-save" class="primary">Save</button>
+          <button id="btn-close-settings">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden file input for loading demo scripts from disk -->
+    <input type="file" id="file-input" accept=".json" style="display:none" />
+
+    <script src="panel.js"></script>
+  </body>
+</html>

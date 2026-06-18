@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent; /* the whole window is see-through */
+  /* The window itself is click-through (set in Rust); this is belt & braces. */
+  pointer-events: none;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hidden { opacity: 0 !important; pointer-events: none; }
+
+/* ========== Pointer ========== */
+#pointer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%);
+  /* smooth glide to the next target */
+  transition:
+    left 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    top 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease;
+  z-index: 10;
+}
+
+/* Inner glowing dot */
+#pointer .dot {
+  position: absolute;
+  left: -10px;
+  top: -10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #709dff, #4a7aff);
+  box-shadow:
+    0 0 18px 6px rgba(90, 138, 255, 0.7),
+    0 0 4px 1px rgba(255, 255, 255, 0.4) inset;
+  animation: dotGlow 2s ease-in-out infinite;
+}
+@keyframes dotGlow {
+  0%, 100% { box-shadow: 0 0 18px 6px rgba(90, 138, 255, 0.7), 0 0 4px 1px rgba(255,255,255,0.4) inset; }
+  50%      { box-shadow: 0 0 28px 10px rgba(90, 138, 255, 0.9), 0 0 6px 2px rgba(255,255,255,0.5) inset; }
+}
+
+/* Outer pulsing ring */
+#pointer .ring {
+  position: absolute;
+  left: -24px;
+  top: -24px;
+  width: 48px;
+  height: 48px;
+  border: 2.5px solid rgba(90, 138, 255, 0.85);
+  border-radius: 50%;
+  animation: pulse 1.8s ease-out infinite;
+}
+
+/* Second ring for a richer effect */
+#pointer .ring::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border: 1.5px solid rgba(90, 138, 255, 0.3);
+  border-radius: 50%;
+  animation: pulse 1.8s ease-out 0.4s infinite;
+}
+
+@keyframes pulse {
+  0%   { transform: scale(0.5); opacity: 0.9; }
+  70%  { transform: scale(1.8); opacity: 0; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* Label tooltip */
+#pointer .label {
+  position: absolute;
+  left: 28px;
+  top: -16px;
+  white-space: nowrap;
+  background: rgba(12, 14, 30, 0.92);
+  color: #fff;
+  padding: 7px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(100, 130, 255, 0.3);
+  border: 1px solid rgba(100, 130, 255, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: labelFadeIn 0.3s ease-out;
+}
+@keyframes labelFadeIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ========== Caption / subtitles ========== */
+#caption {
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  transform: translateX(-50%);
+  max-width: 68vw;
+  text-align: center;
+  background: rgba(10, 12, 26, 0.88);
+  color: #fff;
+  padding: 16px 30px;
+  border-radius: 18px;
+  font-size: 22px;
+  line-height: 1.45;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  box-shadow:
+    0 12px 48px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(100, 130, 255, 0.2);
+  border: 1px solid rgba(100, 130, 255, 0.2);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  transition: opacity 0.3s ease;
+  animation: captionSlide 0.35s ease-out;
+}
+@keyframes captionSlide {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

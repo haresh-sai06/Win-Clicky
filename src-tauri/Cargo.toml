@@ -1,0 +1,34 @@
+[package]
+name = "clicky"
+version = "0.1.0"
+description = "Clicky for Windows - an AI buddy that lives by your cursor and can demo your project"
+authors = ["you"]
+edition = "2021"
+
+# The library is what `main.rs` calls into (and what mobile targets use).
+[lib]
+name = "clicky_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-global-shortcut = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# rustls so we don't depend on a system OpenSSL/native-tls install
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+base64 = "0.22"
+# xcap 0.9 returns image::RgbaImage, so both crates are needed
+xcap = "0.9"
+image = "0.25"
+dirs = "5"
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

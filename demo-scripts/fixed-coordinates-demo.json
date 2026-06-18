@@ -1,0 +1,10 @@
+{
+  "_comment": "Advanced: use explicit 0-1 fractional coordinates instead of 'find'. These run WITHOUT calling the LLM, so they work offline and are perfectly repeatable. x=0 is the left edge, x=1 the right edge; y=0 top, y=1 bottom.",
+  "title": "Pixel-perfect scripted demo",
+  "steps": [
+    { "say": "Welcome! Here is the top navigation.", "point": { "x": 0.5, "y": 0.04, "label": "Nav bar" }, "hold": 1500 },
+    { "say": "Over on the left is the sidebar.", "point": { "x": 0.08, "y": 0.5, "label": "Sidebar" }, "hold": 1500 },
+    { "say": "And the big call-to-action is bottom-right.", "point": { "x": 0.9, "y": 0.92, "label": "Get started" }, "hold": 1500 },
+    { "say": "That completes the tour. Thank you!", "hold": 800 }
+  ]
+}

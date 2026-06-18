@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Clicky",
+  "version": "0.1.0",
+  "identifier": "so.clicky.windows",
+  "build": {
+    "frontendDist": "../src"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "panel",
+        "title": "Clicky",
+        "url": "index.html",
+        "width": 380,
+        "height": 280,
+        "minWidth": 320,
+        "minHeight": 160,
+        "resizable": true,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "skipTaskbar": false,
+        "shadow": false,
+        "center": false,
+        "x": 80,
+        "y": 80
+      },
+      {
+        "label": "overlay",
+        "title": "Clicky Overlay",
+        "url": "overlay.html",
+        "width": 1920,
+        "height": 1079,
+        "x": 0,
+        "y": 0,
+        "resizable": false,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "focus": false,
+        "shadow": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/icon.png",
+      "icons/icon.ico"
+    ]
+  }
+}
