@@ -56,7 +56,8 @@ The GUI cannot run on this Linux CI box (WebView2 / Windows SAPI). What **is** m
 
 | Metric | Value | How |
 |---|---|---|
-| POINT extraction P / R / F1 | **1.00 / 1.00 / 1.00** | 5 golden replies in `eval/fixtures/golden_replies.json` |
+| POINT extraction P / R / F1 | **1.00 / 1.00 / 1.00** | **45** golden replies in `eval/fixtures/golden_replies.json` (incl. malformed / OOB) |
+| Invalid-coordinate detection | **8 / 8** (accuracy 1.00) | expect_invalid fixtures |
 | Invalid coordinate detection | **1 / 1** | OOB tags marked `valid: false` |
 | Demo script validation | **2 / 2 pass** | `demo-scripts/*.json` |
 | Node tests | **5 / 5 pass** | `node --test tests/point_parser.test.mjs` |

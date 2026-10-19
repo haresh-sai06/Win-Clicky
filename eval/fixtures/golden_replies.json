@@ -1,34 +1,47 @@
 [
-  {
-    "id": "r1",
-    "reply": "This is the title bar [POINT:0.50,0.06:Title]. Over here is the Ask button [POINT:0.82,0.12:Ask].",
-    "gold_points": [
-      {"x": 0.50, "y": 0.06, "label": "Title"},
-      {"x": 0.82, "y": 0.12, "label": "Ask"}
-    ]
-  },
-  {
-    "id": "r2",
-    "reply": "No pointing needed — just a spoken tip about keyboard shortcuts.",
-    "gold_points": []
-  },
-  {
-    "id": "r3",
-    "reply": "Click save [POINT:0.10,0.90:Save] then publish [POINT:0.90,0.90:Publish] when ready.",
-    "gold_points": [
-      {"x": 0.10, "y": 0.90, "label": "Save"},
-      {"x": 0.90, "y": 0.90, "label": "Publish"}
-    ]
-  },
-  {
-    "id": "r4",
-    "reply": "Malformed on purpose [POINT:2.0,0.5:Offscreen] should be marked invalid.",
-    "gold_points": [],
-    "expect_invalid": 1
-  },
-  {
-    "id": "r5",
-    "reply": "Center of the screen [POINT:0.5,0.5:Center].",
-    "gold_points": [{"x": 0.5, "y": 0.5, "label": "Center"}]
-  }
+  {"id": "r1", "reply": "This is the title bar [POINT:0.50,0.06:Title]. Over here is the Ask button [POINT:0.82,0.12:Ask].", "gold_points": [{"x": 0.50, "y": 0.06, "label": "Title"}, {"x": 0.82, "y": 0.12, "label": "Ask"}]},
+  {"id": "r2", "reply": "No pointing needed — just a spoken tip about keyboard shortcuts.", "gold_points": []},
+  {"id": "r3", "reply": "Click save [POINT:0.10,0.90:Save] then publish [POINT:0.90,0.90:Publish] when ready.", "gold_points": [{"x": 0.10, "y": 0.90, "label": "Save"}, {"x": 0.90, "y": 0.90, "label": "Publish"}]},
+  {"id": "r4", "reply": "Malformed on purpose [POINT:2.0,0.5:Offscreen] should be marked invalid.", "gold_points": [], "expect_invalid": 1},
+  {"id": "r5", "reply": "Center of the screen [POINT:0.5,0.5:Center].", "gold_points": [{"x": 0.5, "y": 0.5, "label": "Center"}]},
+  {"id": "r6", "reply": "Top-left corner [POINT:0.0,0.0:Origin].", "gold_points": [{"x": 0.0, "y": 0.0, "label": "Origin"}]},
+  {"id": "r7", "reply": "Bottom-right [POINT:1.0,1.0:BR].", "gold_points": [{"x": 1.0, "y": 1.0, "label": "BR"}]},
+  {"id": "r8", "reply": "Spaces around numbers [POINT: 0.25 , 0.75 : Menu].", "gold_points": [{"x": 0.25, "y": 0.75, "label": "Menu"}]},
+  {"id": "r9", "reply": "Empty label is fine [POINT:0.33,0.66:].", "gold_points": [{"x": 0.33, "y": 0.66, "label": ""}]},
+  {"id": "r10", "reply": "Three points in a row [POINT:0.1,0.2:A] [POINT:0.3,0.4:B] [POINT:0.5,0.6:C].", "gold_points": [{"x": 0.1, "y": 0.2, "label": "A"}, {"x": 0.3, "y": 0.4, "label": "B"}, {"x": 0.5, "y": 0.6, "label": "C"}]},
+  {"id": "r11", "reply": "Negative x [POINT:-0.1,0.5:BadX] is invalid.", "gold_points": [], "expect_invalid": 1},
+  {"id": "r12", "reply": "Negative y [POINT:0.5,-0.2:BadY] is invalid.", "gold_points": [], "expect_invalid": 1},
+  {"id": "r13", "reply": "Both out of range [POINT:1.5,1.5:Far] invalid.", "gold_points": [], "expect_invalid": 1},
+  {"id": "r14", "reply": "Mix valid and invalid [POINT:0.2,0.2:OK] then [POINT:9,9:Nope].", "gold_points": [{"x": 0.2, "y": 0.2, "label": "OK"}], "expect_invalid": 1},
+  {"id": "r15", "reply": "Integers without leading zero [POINT:0,1:TopEdge].", "gold_points": [{"x": 0.0, "y": 1.0, "label": "TopEdge"}]},
+  {"id": "r16", "reply": "Label with spaces [POINT:0.4,0.3:Submit button].", "gold_points": [{"x": 0.4, "y": 0.3, "label": "Submit button"}]},
+  {"id": "r17", "reply": "Label with punctuation [POINT:0.6,0.1:File > Save As…].", "gold_points": [{"x": 0.6, "y": 0.1, "label": "File > Save As…"}]},
+  {"id": "r18", "reply": "Almost tag but wrong: [POINT 0.5,0.5:Nope] missing colon.", "gold_points": []},
+  {"id": "r19", "reply": "Wrong bracket (POINT:0.5,0.5:Paren) should not match.", "gold_points": []},
+  {"id": "r20", "reply": "Trailing text after point [POINT:0.15,0.85:Dock] and then more speech.", "gold_points": [{"x": 0.15, "y": 0.85, "label": "Dock"}]},
+  {"id": "r21", "reply": "Only whitespace between points [POINT:0.1,0.1:One]   [POINT:0.9,0.9:Two]", "gold_points": [{"x": 0.1, "y": 0.1, "label": "One"}, {"x": 0.9, "y": 0.9, "label": "Two"}]},
+  {"id": "r22", "reply": "High precision floats [POINT:0.123456,0.987654:Precise].", "gold_points": [{"x": 0.123456, "y": 0.987654, "label": "Precise"}]},
+  {"id": "r23", "reply": "y equals 0 [POINT:0.7,0:Top].", "gold_points": [{"x": 0.7, "y": 0.0, "label": "Top"}]},
+  {"id": "r24", "reply": "x equals 1 [POINT:1,0.4:Right].", "gold_points": [{"x": 1.0, "y": 0.4, "label": "Right"}]},
+  {"id": "r25", "reply": "Just below zero invalid [POINT:-0.0001,0.5:TinyNeg].", "gold_points": [], "expect_invalid": 1},
+  {"id": "r26", "reply": "Just above one invalid [POINT:0.5,1.0001:TinyOver].", "gold_points": [], "expect_invalid": 1},
+  {"id": "r27", "reply": "Unicode label [POINT:0.55,0.45:保存].", "gold_points": [{"x": 0.55, "y": 0.45, "label": "保存"}]},
+  {"id": "r28", "reply": "Emoji label [POINT:0.48,0.52:⭐ Star].", "gold_points": [{"x": 0.48, "y": 0.52, "label": "⭐ Star"}]},
+  {"id": "r29", "reply": "No tags at all. Pure narration about the ribbon.", "gold_points": []},
+  {"id": "r30", "reply": "Empty string edge — wait this has content but no points: click the blue thing.", "gold_points": []},
+  {"id": "r31", "reply": "Adjacent tags[POINT:0.2,0.3:L][POINT:0.4,0.5:R]no spaces.", "gold_points": [{"x": 0.2, "y": 0.3, "label": "L"}, {"x": 0.4, "y": 0.5, "label": "R"}]},
+  {"id": "r32", "reply": "Scientific-ish but still decimal [POINT:0.01,0.99:Corners].", "gold_points": [{"x": 0.01, "y": 0.99, "label": "Corners"}]},
+  {"id": "r33", "reply": "Missing closing bracket [POINT:0.5,0.5:Open should not parse as a point.", "gold_points": []},
+  {"id": "r34", "reply": "POINT keyword alone is not a tag: POINT:0.5,0.5:Bare", "gold_points": []},
+  {"id": "r35", "reply": "Valid then speech then valid [POINT:0.3,0.3:First]. Now look here [POINT:0.7,0.7:Second].", "gold_points": [{"x": 0.3, "y": 0.3, "label": "First"}, {"x": 0.7, "y": 0.7, "label": "Second"}]},
+  {"id": "r36", "reply": "Four corners tour [POINT:0,0:TL] [POINT:1,0:TR] [POINT:0,1:BL] [POINT:1,1:BR].", "gold_points": [{"x": 0.0, "y": 0.0, "label": "TL"}, {"x": 1.0, "y": 0.0, "label": "TR"}, {"x": 0.0, "y": 1.0, "label": "BL"}, {"x": 1.0, "y": 1.0, "label": "BR"}]},
+  {"id": "r37", "reply": "NaN-like garbage [POINT:foo,bar:Bad] should not match the regex.", "gold_points": []},
+  {"id": "r38", "reply": "Extra colon in label [POINT:0.22,0.33:Ratio 16:9].", "gold_points": [{"x": 0.22, "y": 0.33, "label": "Ratio 16:9"}]},
+  {"id": "r39", "reply": "Whitespace-only reply body with a point after newline:\n[POINT:0.5,0.25:Header]", "gold_points": [{"x": 0.5, "y": 0.25, "label": "Header"}]},
+  {"id": "r40", "reply": "Double invalid [POINT:-1,-1:A] [POINT:2,2:B].", "gold_points": [], "expect_invalid": 2},
+  {"id": "r41", "reply": "Mid-sentence point like this [POINT:0.61,0.19:Search] mid-sentence continues.", "gold_points": [{"x": 0.61, "y": 0.19, "label": "Search"}]},
+  {"id": "r42", "reply": "Leading point [POINT:0.05,0.05:Badge] then explanation of the badge.", "gold_points": [{"x": 0.05, "y": 0.05, "label": "Badge"}]},
+  {"id": "r43", "reply": "Tab character around coords [POINT:\t0.4\t,\t0.6\t:Tabby].", "gold_points": [{"x": 0.4, "y": 0.6, "label": "Tabby"}]},
+  {"id": "r44", "reply": "Zero-width content between tags [POINT:0.11,0.22:X]\u200b[POINT:0.33,0.44:Y]", "gold_points": [{"x": 0.11, "y": 0.22, "label": "X"}, {"x": 0.33, "y": 0.44, "label": "Y"}]},
+  {"id": "r45", "reply": "Quoted speech 'click here' [POINT:0.8,0.2:Link] end.", "gold_points": [{"x": 0.8, "y": 0.2, "label": "Link"}]}
 ]

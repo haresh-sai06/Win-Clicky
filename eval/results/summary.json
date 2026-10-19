@@ -1,16 +1,16 @@
 {
   "point_tag_extraction": {
-    "tp": 5,
+    "tp": 41,
     "fp": 0,
     "fn": 0,
     "precision": 1,
     "recall": 1,
     "f1": 1,
-    "n_fixtures": 5
+    "n_fixtures": 45
   },
   "invalid_coordinate_detection": {
-    "detected": 1,
-    "cases": 1,
+    "detected": 8,
+    "cases": 8,
     "accuracy": 1
   },
   "demo_script_validation": [
