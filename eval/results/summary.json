@@ -1,0 +1,30 @@
+{
+  "point_tag_extraction": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1,
+    "recall": 1,
+    "f1": 1,
+    "n_fixtures": 5
+  },
+  "invalid_coordinate_detection": {
+    "detected": 1,
+    "cases": 1,
+    "accuracy": 1
+  },
+  "demo_script_validation": [
+    {
+      "name": "sample-demo.json",
+      "ok": true,
+      "errors": [],
+      "steps": 5
+    },
+    {
+      "name": "fixed-coordinates-demo.json",
+      "ok": true,
+      "errors": [],
+      "steps": 4
+    }
+  ]
+}

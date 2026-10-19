@@ -11,6 +11,7 @@
 mod capture;
 mod config;
 mod llm;
+mod point;
 mod tts;
 
 use tauri::{Emitter, Manager};

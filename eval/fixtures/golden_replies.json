@@ -1,0 +1,34 @@
+[
+  {
+    "id": "r1",
+    "reply": "This is the title bar [POINT:0.50,0.06:Title]. Over here is the Ask button [POINT:0.82,0.12:Ask].",
+    "gold_points": [
+      {"x": 0.50, "y": 0.06, "label": "Title"},
+      {"x": 0.82, "y": 0.12, "label": "Ask"}
+    ]
+  },
+  {
+    "id": "r2",
+    "reply": "No pointing needed — just a spoken tip about keyboard shortcuts.",
+    "gold_points": []
+  },
+  {
+    "id": "r3",
+    "reply": "Click save [POINT:0.10,0.90:Save] then publish [POINT:0.90,0.90:Publish] when ready.",
+    "gold_points": [
+      {"x": 0.10, "y": 0.90, "label": "Save"},
+      {"x": 0.90, "y": 0.90, "label": "Publish"}
+    ]
+  },
+  {
+    "id": "r4",
+    "reply": "Malformed on purpose [POINT:2.0,0.5:Offscreen] should be marked invalid.",
+    "gold_points": [],
+    "expect_invalid": 1
+  },
+  {
+    "id": "r5",
+    "reply": "Center of the screen [POINT:0.5,0.5:Center].",
+    "gold_points": [{"x": 0.5, "y": 0.5, "label": "Center"}]
+  }
+]

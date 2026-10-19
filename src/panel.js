@@ -99,7 +99,14 @@ function parseJsonLoose(text) {
 }
 
 // Split a reply into ordered "say" and "point" segments using [POINT:x,y:label].
+// Uses the shared parser from point_parser.js (loaded before this file in panel.html).
 function parseSegments(text) {
+  if (globalThis.ClickyPointParser) {
+    return globalThis.ClickyPointParser.parseSegments(text).map((s) =>
+      s.type === "point" ? { type: "point", x: s.x, y: s.y, label: s.label } : s
+    );
+  }
+  // Inline fallback (should not run if panel.html is up to date).
   const re = /\[POINT:\s*([0-9]*\.?[0-9]+)\s*,\s*([0-9]*\.?[0-9]+)\s*:\s*([^\]]*)\]/g;
   const segs = [];
   let last = 0;
