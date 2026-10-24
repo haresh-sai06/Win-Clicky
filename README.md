@@ -42,6 +42,12 @@ cargo tauri dev
 
 First build takes a few minutes (Rust compiles a lot the first time). Two windows appear: the **buddy panel** and an invisible full-screen **overlay**.
 
+The LLM URL and reply parsers have unit tests (no network, no window):
+
+```powershell
+cargo test --manifest-path src-tauri/Cargo.toml --lib llm::tests
+```
+
 To produce a distributable `.exe` / installer:
 
 ```powershell
