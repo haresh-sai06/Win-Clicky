@@ -50,6 +50,79 @@ fn system_prompt(cfg: &AppConfig) -> String {
     format!("{}\n\n{}", cfg.system_prompt, BASE_INSTRUCTIONS)
 }
 
+/// Join `base` with an API path once. Users often paste the full endpoint
+/// (`.../v1/chat/completions`) into the base URL field; appending again 404s.
+fn append_endpoint(base: &str, endpoint: &str) -> String {
+    let trimmed = base.trim().trim_end_matches('/');
+    let suffix = format!("/{endpoint}");
+    if trimmed.ends_with(&suffix) {
+        trimmed.to_string()
+    } else {
+        format!("{trimmed}{suffix}")
+    }
+}
+
+fn openai_chat_url(base: &str) -> String {
+    append_endpoint(base, "chat/completions")
+}
+
+fn anthropic_messages_url(base: &str) -> String {
+    append_endpoint(base, "messages")
+}
+
+fn meaningful(s: &str) -> Option<&str> {
+    if s.trim().is_empty() {
+        None
+    } else {
+        Some(s)
+    }
+}
+
+fn joined_text_parts(parts: &[Value]) -> Option<String> {
+    let joined: String = parts
+        .iter()
+        .filter_map(|part| part["text"].as_str())
+        .collect::<Vec<_>>()
+        .join("");
+    if meaningful(&joined).is_some() {
+        Some(joined)
+    } else {
+        None
+    }
+}
+
+/// Visible assistant text from an OpenAI-compatible `message` object.
+///
+/// An empty string is not a reply: some reasoning models send `"content": ""`
+/// (or null) and put the words in `reasoning_content`. A content array is the
+/// visible reply and wins over `reasoning_content`, which is chain-of-thought.
+fn openai_message_text(msg: &Value) -> Option<String> {
+    if let Some(s) = msg["content"].as_str() {
+        if let Some(text) = meaningful(s) {
+            return Some(text.to_string());
+        }
+    }
+    if let Some(parts) = msg["content"].as_array() {
+        if let Some(text) = joined_text_parts(parts) {
+            return Some(text);
+        }
+    }
+    msg["reasoning_content"]
+        .as_str()
+        .and_then(meaningful)
+        .map(str::to_string)
+}
+
+/// Visible assistant text from an Anthropic Messages body.
+/// Thinking blocks have no `text`; skip them and keep later text blocks.
+fn anthropic_message_text(body: &Value) -> Option<String> {
+    if let Some(s) = body["content"].as_str() {
+        return meaningful(s).map(str::to_string);
+    }
+    let parts = body["content"].as_array()?;
+    joined_text_parts(parts)
+}
+
 async fn ask_openai(
     cfg: &AppConfig,
     prompt: &str,
@@ -79,7 +152,7 @@ async fn ask_openai(
         "temperature": 0.5
     });
 
-    let url = format!("{}/chat/completions", cfg.base_url.trim_end_matches('/'));
+    let url = openai_chat_url(&cfg.base_url);
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(120))
         .build()
@@ -100,25 +173,8 @@ async fn ask_openai(
         return Err(format!("LLM error {}: {}", status, text));
     }
     let v: Value = serde_json::from_str(&text).map_err(|e| e.to_string())?;
-    let msg = &v["choices"][0]["message"];
-    // Standard field
-    if let Some(s) = msg["content"].as_str() {
-        return Ok(s.to_string());
-    }
-    // Reasoning / thinking models (DeepSeek-R1, Nemotron-omni, etc.) put the
-    // visible reply in `reasoning_content` when `content` is null.
-    if let Some(s) = msg["reasoning_content"].as_str() {
-        return Ok(s.to_string());
-    }
-    // OpenRouter wraps some models with a nested content array
-    if let Some(arr) = msg["content"].as_array() {
-        let joined: String = arr.iter()
-            .filter_map(|c| c["text"].as_str())
-            .collect::<Vec<_>>()
-            .join("");
-        if !joined.is_empty() { return Ok(joined); }
-    }
-    Err(format!("unexpected response shape: {}", text))
+    openai_message_text(&v["choices"][0]["message"])
+        .ok_or_else(|| format!("unexpected response shape: {}", text))
 }
 
 async fn ask_anthropic(
@@ -153,7 +209,7 @@ async fn ask_anthropic(
         "messages": messages
     });
 
-    let url = format!("{}/messages", cfg.base_url.trim_end_matches('/'));
+    let url = anthropic_messages_url(&cfg.base_url);
     let client = reqwest::Client::new();
     let resp = client
         .post(&url)
@@ -170,8 +226,105 @@ async fn ask_anthropic(
         return Err(format!("LLM error {}: {}", status, text));
     }
     let v: Value = serde_json::from_str(&text).map_err(|e| e.to_string())?;
-    v["content"][0]["text"]
-        .as_str()
-        .map(|s| s.to_string())
-        .ok_or_else(|| format!("unexpected response shape: {}", text))
+    anthropic_message_text(&v).ok_or_else(|| format!("unexpected response shape: {}", text))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn chat_url_appends_once() {
+        assert_eq!(
+            openai_chat_url("https://api.openai.com/v1"),
+            "https://api.openai.com/v1/chat/completions"
+        );
+        assert_eq!(
+            openai_chat_url("https://api.openai.com/v1/"),
+            "https://api.openai.com/v1/chat/completions"
+        );
+        assert_eq!(
+            openai_chat_url(" https://api.openai.com/v1/chat/completions/ "),
+            "https://api.openai.com/v1/chat/completions"
+        );
+    }
+
+    #[test]
+    fn anthropic_url_appends_once() {
+        assert_eq!(
+            anthropic_messages_url("https://api.anthropic.com/v1"),
+            "https://api.anthropic.com/v1/messages"
+        );
+        assert_eq!(
+            anthropic_messages_url("https://api.anthropic.com/v1/messages/"),
+            "https://api.anthropic.com/v1/messages"
+        );
+    }
+
+    #[test]
+    fn empty_content_uses_reasoning_text() {
+        let msg = json!({
+            "content": "",
+            "reasoning_content": "Look at the center. [POINT:0.5,0.5:center]"
+        });
+        assert_eq!(
+            openai_message_text(&msg).as_deref(),
+            Some("Look at the center. [POINT:0.5,0.5:center]")
+        );
+
+        let null_content = json!({
+            "content": null,
+            "reasoning_content": "fallback reply"
+        });
+        assert_eq!(
+            openai_message_text(&null_content).as_deref(),
+            Some("fallback reply")
+        );
+    }
+
+    #[test]
+    fn content_array_beats_reasoning() {
+        let msg = json!({
+            "content": [
+                {"type": "text", "text": "Visible reply "},
+                {"type": "text", "text": "[POINT:0.2,0.3:button]"}
+            ],
+            "reasoning_content": "internal chain of thought that must not be spoken"
+        });
+        assert_eq!(
+            openai_message_text(&msg).as_deref(),
+            Some("Visible reply [POINT:0.2,0.3:button]")
+        );
+    }
+
+    #[test]
+    fn plain_string_content_is_unchanged() {
+        let msg = json!({"content": "  hello  "});
+        assert_eq!(openai_message_text(&msg).as_deref(), Some("  hello  "));
+    }
+
+    #[test]
+    fn anthropic_skips_thinking_block() {
+        let body = json!({
+            "content": [
+                {"type": "thinking", "thinking": "plan the tour"},
+                {"type": "text", "text": "Here is the button. [POINT:0.8,0.9:go]"}
+            ]
+        });
+        assert_eq!(
+            anthropic_message_text(&body).as_deref(),
+            Some("Here is the button. [POINT:0.8,0.9:go]")
+        );
+    }
+
+    #[test]
+    fn missing_text_is_none() {
+        assert_eq!(openai_message_text(&json!({})), None);
+        assert_eq!(anthropic_message_text(&json!({"content": []})), None);
+        assert_eq!(
+            anthropic_message_text(&json!({"content": [{"type": "thinking"}]})),
+            None
+        );
+    }
 }
